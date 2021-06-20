@@ -1,0 +1,14 @@
+table {
+    border-collapse: collapse;
+}
+th {
+    width: 60px;
+    height: 60px;
+}
+th.no-empty {
+    border: 1px solid black;
+}
+
+th.now {
+    background-color: pink;
+}
