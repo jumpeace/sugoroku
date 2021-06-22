@@ -75,24 +75,7 @@ class Order {
         'goal': this.#values.length - 1,
         'previous': undefined,
     };
-    advance = (n) => {
-        // ゴールしている場合
-        if (this.getIsOn('goal')) {
-            return false;
-        }
-
-        // 前の位置を記憶
-        this.#specials.previous = this.#now;
-
-        // 駒を進める
-        if (this.#now + n >= this.#values.length - 1) {
-            this.#now = this.#getSpecial('goal');
-        }
-        else {
-            this.#now += n;
-        }
-        return true;
-    }
+    
     #findValue = (xy) => {
         for (let i = 0; i < this.#values.length; i++) {
             if (xy.equals(this.#values[i])) {
@@ -112,6 +95,7 @@ class Order {
         }
         return values;
     }
+
     #getSpecial = key => this.#specials[key];
     getIsOn = key => this.#now === this.#getSpecial(key);
     getXy = key => {
@@ -124,7 +108,30 @@ class Order {
         }
         return toXyList[key];
     }
+
     setStart = () => this.#now = this.#getSpecial('start');
+    advance = (n) => {
+        // ゴールしている場合
+        if (this.getIsOn('goal')) {
+            return false;
+        }
+
+        // 前の位置を記憶
+        this.#specials.previous = this.#now;
+
+        // 駒を進める
+        if (this.#now + n >= this.#values.length - 1) {
+            this.#now = this.#getSpecial('goal');
+        }
+        else {
+            this.#now += n;
+        }
+        return true;
+    }
+    reset = () => {
+        this.#specials.previous = undefined;
+        this.setStart();
+    }
 }
 
 class Board {
@@ -145,11 +152,8 @@ class Board {
         })
     }
     getThDOM = xy => $(`tr#rows-${xy.y} > th#value-${xy.x}`);
-    setStart = () => {
-        this.order.setStart();
-        this.reRender();
-    }
     #getClassName = xy => this.getValue(xy) ? 'no-empty' : 'empty';
+
     initRender = () => {
         this.valuesForEach((y) => {
             $('tbody').append(`<tr id="rows-${y}"></tr>`);
@@ -163,6 +167,11 @@ class Board {
         }
         this.getThDOM(this.order.getXy('now')).addClass('now');
     }
+
+    setStart = () => {
+        this.order.setStart();
+        this.reRender();
+    }
     advance = (n) => {
         // マスを進める
         if (!this.order.advance(n)) {
@@ -174,9 +183,9 @@ class Board {
     }
     reset = () => {
         this.getThDOM(this.order.getXy('now')).removeClass('now');
+        this.order.reset();
         this.setStart();
         this.reRender();
-        // TODO goal付近までいってリセットするとそのあと進めない
     }
 }
 
