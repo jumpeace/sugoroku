@@ -1,4 +1,10 @@
-table {
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+table.board {
+    margin-top: 20px;
     border-collapse: collapse;
 }
 th {
@@ -8,7 +14,14 @@ th {
 th.no-empty {
     border: 1px solid black;
 }
-
 th.now {
     background-color: pink;
+}
+
+.button-container {
+    margin-top: 20px;
+}
+
+.message {
+    margin-top: 20px;
 }

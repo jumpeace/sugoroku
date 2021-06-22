@@ -56,6 +56,10 @@ const xyWayForEach = func => {
     })
 }
 
+const messageRender = (message) => {
+    $('.message').text(message);
+} 
+
 class Order {
     #values = [
         new XY(0, 0),
@@ -195,10 +199,7 @@ class Board {
     }
     randomAdvance = () => {
         const result = this.#advance(Math.floor(Math.random() * 6) + 1);
-        console.log(result ? `${result.advanceN}マス進みました` : 'すでにゴールしています');
-        if (result && result.doesGoal) {
-            console.log('ゴールしました');
-        }
+        messageRender(result ? `${result.advanceN}マス進みました。${result.doesGoal ? 'ゴールしました。' : ''}` : 'すでにゴールしています。');
     }
     reset = () => {
         this.getThDOM(this.#order.getXy('now')).removeClass('now');
